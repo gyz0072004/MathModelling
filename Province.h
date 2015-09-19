@@ -13,10 +13,14 @@
 #define SCENEEND 18
 #define MAXDRIVE 8
 #define MAXHALFDRIVE 5
-#define MAXPLAYDRIVE 3(<#args#>
+#define MAXPLAYDRIVE 3
+#define HOURHALFDAY 4
+#define HOURFULLDAY 8
+#define HOURCITY 24
+#define HOURTWODAY 30
 using namespace std;
 
-class Province{
+class Province {
 public:
 	string name;
 	int cityNum;
@@ -29,9 +33,9 @@ public:
 	//int *path;//only for Dijkstra
 	string *tour;
 	vector<int> left;
-    int scenes;
-    int minl;
-    int *mina;
+    int scenes;//number of scenes
+    int minl;//shortest time
+    int *mina;//shortest path in index
 
     Province(string Name):name(Name){
         minl = numeric_limits<int>::min();
@@ -87,22 +91,106 @@ public:
         }
     }
     
-    double timeCalc(int a[]) {
-        double drived=static_cast<double>(distanceFromStart)/SPEEDHIGH,time=DRIVESTART;
+    int timeCalc(int a[]) {
+        double time=DRIVESTART,drived=0,remaining=MAXDRIVE;
         int result=1;
-        drive(drived, result, MAXDRIVE, time);
-        // TODO
+        double timeFromStart=static_cast<double>(distanceFromStart)/SPEEDHIGH;
+        drive(drived,timeFromStart, result,remaining, time);
+        int current=0;
+        bool halfplayed=false;
+        for(int i=0;i<scenes;i++) {
+            int next=a[i];
+            if(current<next) {
+                drive(drived,Shortest[current][next],result,remaining,time);
+            }else if (current>next) {
+                drive(drived,Shortest[next][current],result,remaining,time);
+            }
+            play(drived,left[next],result,remaining,time,halfplayed);
+            current=next;
+        }
+        if(current!=0) {
+            drive(drived,Shortest[0][current],result,remaining,time);
+        }
+        drive(drived, timeFromStart, result, remaining, time);
         return result;
     }
     
-    void drive(double& drived,int& result,double remaining,double& time) {
-        while(drived>remaining) {
-            drived-=remaining;
+    void drive(double& drived,double length,int& result,double& remaining,double& time) {
+        while(length>remaining) {
+            length-=remaining;
             time=DRIVESTART;
             result++;
             remaining=MAXDRIVE;
         }
-        time+=drived;
+        time+=length;
+        drived=length;
+        remaining-=length;
+    }
+    
+    void play(double& drived,int length,int& result,double& remaining, double& time,bool& halfplayed) {
+        switch (length) {
+            case HOURHALFDAY:
+                if(halfplayed&&drived<=MAXPLAYDRIVE&&time+length<=SCENEEND) {
+                    time+=length;
+                    if(remaining>DRIVEEND-time) {
+                        remaining=DRIVEEND-time;
+                    }
+                    if(remaining>MAXPLAYDRIVE) {
+                        remaining=MAXPLAYDRIVE;
+                    }
+                }
+                else if(!halfplayed && drived<=MAXHALFDRIVE && time + length<=SCENEEND) {
+                    time+=length;
+                    halfplayed=true;
+                    if(remaining>DRIVEEND-time) {
+                        remaining=DRIVEEND-time;
+                    }
+                    if(remaining>MAXHALFDRIVE) {
+                        remaining=MAXHALFDRIVE;
+                    }
+                } else {
+                    result++;
+                    time=SCENESTART+length;
+                    drived=0;
+                    remaining=MAXHALFDRIVE;
+                    halfplayed=true;
+                }
+                break;
+            case HOURFULLDAY:
+                if(drived<=MAXPLAYDRIVE&&time+length<=SCENEEND) {
+                    time+=length;
+                    if(remaining>DRIVEEND-time) {
+                        remaining=DRIVEEND-time;
+                    }
+                    if(remaining>MAXPLAYDRIVE) {
+                        remaining=MAXPLAYDRIVE;
+                    }
+                }else {
+                    result++;
+                    time=SCENESTART+length;
+                    drived=0;
+                    remaining=MAXPLAYDRIVE;
+                }
+                break;
+            case HOURCITY:
+                result++;
+                drived=0;
+                remaining=DRIVEEND-time;
+                if(remaining>MAXDRIVE) {
+                    remaining=MAXDRIVE;
+                }
+                break;
+            case HOURTWODAY:
+                if(time+HOURFULLDAY<=SCENEEND) {
+                    result++;
+                }else {
+                    result+=2;
+                }
+                time=SCENESTART+HOURFULLDAY;
+                drived=0;
+                remaining=MAXPLAYDRIVE;
+                break;
+        }
     }
     
     
