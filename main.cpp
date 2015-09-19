@@ -14,5 +14,6 @@ int main(int argc, const char * argv[]) {
     if (a==0) {
         cout<<"hello world!\n";
     }
+    print "aaaaaaaaaa";
     return 0;
 }
