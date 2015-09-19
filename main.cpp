@@ -7,13 +7,13 @@
 //
 
 #include <iostream>
+#include <fstream>
+#include "Province.h"
 using namespace std;
 
 int main(int argc, const char * argv[]) {
-    char* a;
-    if (a==0) {
-        cout<<"hello world!\n";
-    }
-    print "aaaaaaaaaa";
+    Province p("asdf");
+    p.scenes=19;
+    p.ShortestPath();
     return 0;
 }
