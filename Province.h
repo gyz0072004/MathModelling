@@ -135,8 +135,8 @@ public:
                     if(remaining>DRIVEEND-time) {
                         remaining=DRIVEEND-time;
                     }
-                    if(remaining>MAXPLAYDRIVE) {
-                        remaining=MAXPLAYDRIVE;
+                    if(remaining>MAXPLAYDRIVE-drived) {
+                        remaining=MAXPLAYDRIVE-drived;
                     }
                 }
                 else if(!halfplayed && drived<=MAXHALFDRIVE && time + length<=SCENEEND) {
@@ -145,8 +145,8 @@ public:
                     if(remaining>DRIVEEND-time) {
                         remaining=DRIVEEND-time;
                     }
-                    if(remaining>MAXHALFDRIVE) {
-                        remaining=MAXHALFDRIVE;
+                    if(remaining>MAXHALFDRIVE-drived) {
+                        remaining=MAXHALFDRIVE-drived;
                     }
                 } else {
                     result++;
@@ -162,8 +162,8 @@ public:
                     if(remaining>DRIVEEND-time) {
                         remaining=DRIVEEND-time;
                     }
-                    if(remaining>MAXPLAYDRIVE) {
-                        remaining=MAXPLAYDRIVE;
+                    if(remaining>MAXPLAYDRIVE-drived) {
+                        remaining=MAXPLAYDRIVE-drived;
                     }
                 }else {
                     result++;
@@ -181,7 +181,7 @@ public:
                 }
                 break;
             case HOURTWODAY:
-                if(time+HOURFULLDAY<=SCENEEND) {
+                if(time+HOURFULLDAY<=SCENEEND&&drived<=MAXPLAYDRIVE) {
                     result++;
                 }else {
                     result+=2;
