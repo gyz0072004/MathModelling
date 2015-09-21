@@ -27,14 +27,9 @@ int main(){
 	int start = 1;
 	//cin>>start;
 	china.setStartProvince(start);
-    for(int i=1;i<=31;i++) {
-        if(i!=10) {
-            china.timeCalcTest(i);
-            cout<<"******************"<<endl;
-            china.shortestPathTest(i);
-            cout<<"******************"<<endl;;
-        }
-    }
+    china.timeCalcTest(18);
+    china.provinces[17].readFile("beijing", 18);
+    cout<<china.provinces[17].timeCalc(china.provinces[17].mina)<<endl;
 	//system("PAUSE");
 	return 0;
 }

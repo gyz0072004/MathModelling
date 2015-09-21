@@ -7,6 +7,7 @@
 #include <algorithm>
 #include <set>
 #include <limits>
+#include <sstream>
 
 #define SPEEDHIGH 90
 #define SPEEDLOW 40
@@ -120,6 +121,19 @@ public:
         costFlight=numeric_limits<int>::max();
         costTrainFlight=numeric_limits<int>::max();
         costFlightTrain=numeric_limits<int>::max();
+    }
+    
+    void readFile(string prefix,int idx) {
+        stringstream ss;
+        ss<<"/Users/gyz/Workspaces/xcode/math/math/data/"<<prefix<<idx<<".txt";
+        string s;
+        ss>>s;
+        fstream fs(s);
+        fs>>minl;
+        mina=new int[sceneNum];
+        for(int i=0;i<sceneNum;i++) {
+            fs>>mina[i];
+        }
     }
 
 	void addCity(string cityName, int cityIdx){

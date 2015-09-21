@@ -4,6 +4,7 @@
 #include <iostream>
 #include <fstream>
 #include <algorithm>
+#include <sstream>
 #include "Province.h"
 
 using namespace std;
@@ -145,11 +146,18 @@ public:
 	}
     
     void shortestPathTest(int idx) {
+        stringstream ss;
+        ss<<"/Users/gyz/Workspaces/xcode/math/math/data/beijing"<<idx<<".txt"<<endl;
+        string s;
+        ss>>s;
+        cout<<s;
+        fstream fs(s);
         provinces[idx-1].ShortestPath();
-        cout<<idx<<" time:"<<provinces[idx-1].minl<<endl;
+        fs<<provinces[idx-1].minl<<endl;
         for(int i=0;i<provinces[idx-1].sceneNum;i++) {
-            cout<<provinces[idx-1].scenes[provinces[idx-1].mina[i]].idx<<endl;
+            fs<<provinces[idx-1].mina[i]<<endl;
         }
+        fs.close();
     }
 	
     int split(int idx) {
