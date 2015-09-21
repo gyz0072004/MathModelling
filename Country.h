@@ -184,12 +184,9 @@ public:
             mergedCar.push_back(v);
         }
         vector<SortProvince> vsp;
-        for(int i=0;i<provinces.size()-1;i++) {
-            for(int j=i+1;j<provinces.size();j++) {
+        for(int i=0;i<provinces.size();i++) {
+            for(int j=0;j<provinces.size();j++) {
                 int current=provinces[i].minl+provinces[j].minl,temp=mergedCar[i][j];
-                if(mergedCar[j][i]<temp) {
-                    temp=mergedCar[j][i];
-                }
                 if(temp<=15&&temp<current&&provinces[i].choice()==0&&provinces[j].choice()==0) {
                     vsp.push_back(SortProvince(i,j,current-temp));
                 }
