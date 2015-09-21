@@ -27,9 +27,15 @@ int main(){
 	int start = 1;
 	//cin>>start;
 	china.setStartProvince(start);
-    china.timeCalcTest(18);
-    china.provinces[17].readFile("beijing", 18);
-    cout<<china.provinces[17].timeCalc(china.provinces[17].mina)<<endl;
+    for(int i=1;i<=31;i++) {
+        cout<<i<<":";
+        china.timeCalcTest(i);
+        cout<<china.split(i)<<endl;
+    }
+    china.realMergeCar();
+    for(int i=0;i<china.realMergedCar.size();i++) {
+        cout<<"Merge Province: "<<china.realMergedCar[i].i<<" "<<china.realMergedCar[i].j<<endl;
+    }
 	//system("PAUSE");
 	return 0;
 }

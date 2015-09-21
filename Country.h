@@ -143,6 +143,7 @@ public:
 
 	void timeCalcTest(int idx){
 		cout<<"time:"<<provinces[idx-1].tourGenerator(provinces[idx-1].generateOnePath())<<endl;
+        provinces[idx-1].readFile("order", idx);
 	}
     
     void shortestPathTest(int idx) {
