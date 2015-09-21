@@ -32,12 +32,12 @@ int main(){
         china.timeCalcTest(i);
         cout<<china.split(i)<<endl;
     }
-    china.realMergeCar();
+    china.compareTrainOrFlight();
     bool *merged=new bool[china.provinces.size()];
     for (int i=0;i<china.provinces.size();i++) {
         merged[i]=false;
     }
-    fstream fs("/Users/gyz/Workspaces/xcode/math/math/data/1.txt");
+    fstream fs("/Users/gyz/Workspaces/xcode/math/math/data/2.txt");
     for(int i=0;i<china.realMergedCar.size();i++) {
         fs<<"Merge Province: "<<china.realMergedCar[i].i<<" "<<china.realMergedCar[i].j<<endl;
         fs<<china.provinces[china.realMergedCar[i].i].stMerge;
@@ -49,8 +49,28 @@ int main(){
         if(!merged[i]) {
             china.provinces[i].calcCar();
             fs<<"Province: "<<i<<endl;
-            fs<<china.provinces[i].stCar;
-            fs<<"Total price: "<<china.provinces[i].costCar<<endl;
+            switch (china.provinces[i].choice()) {
+                case 0:
+                    fs<<china.provinces[i].stCar;
+                    fs<<"Total price: "<<china.provinces[i].stCar;
+                    break;
+                case 1:
+                    fs<<china.provinces[i].stTrain;
+                    fs<<"Total price: "<<china.provinces[i].stTrain;
+                    break;
+                case 2:
+                    fs<<china.provinces[i].stFlight;
+                    fs<<"Total price: "<<china.provinces[i].stFlight;
+                    break;
+                case 3:
+                    fs<<china.provinces[i].stTrainFlight;
+                    fs<<"Total price: "<<china.provinces[i].stTrainFlight;
+                    break;
+                case 4:
+                    fs<<china.provinces[i].stFlightTrain;
+                    fs<<"Total price: "<<china.provinces[i].stFlightTrain;
+                    break;
+            }
         }
     }
     fs.close();
