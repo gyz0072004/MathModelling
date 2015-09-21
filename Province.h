@@ -73,6 +73,7 @@ public:
     float costFlight;
     float costTrainFlight;
     float costFlightTrain;
+    float costMerge;
     string stCar;
     string stTrain;
     string stFlight;
@@ -675,38 +676,50 @@ public:
         sscurrent->str(HEADING);
         double time=DRIVESTART,drived=0,remaining=MAXDRIVE;
         int result=1;
+        float c=0;
         bool halfplayed=false,fullplayed=false;
         drive(drived,static_cast<double>(distanceFromStart)/SPEEDHIGH, result,remaining, time,halfplayed,fullplayed,-1,0);
+        c+=distanceFromStart;
         int current=0;
         for(int i=splitStart;i<splitEnd;i++) {
             int next=mina[i];
             if(current<next) {
                 drive(drived,Shortest[current][next],result,remaining,time,halfplayed,fullplayed,current,next);
+                c+=DriveCost[current][next];
             }else if (current>next) {
                 drive(drived,Shortest[next][current],result,remaining,time,halfplayed,fullplayed,current,next);
+                c+=DriveCost[next][current];
             }
             play(drived,scenes[next].stay,result,remaining,time,halfplayed,fullplayed,i);
             current=next;
         }
         if(current!=0) {
             drive(drived,Shortest[0][current],result,remaining,time,halfplayed,fullplayed,current,0);
+            c+=DriveCost[current][0];
         }
         drive(drived, static_cast<double>(distance)/SPEEDHIGH, result, remaining, time,halfplayed,fullplayed,scenes[0].idx,p.scenes[0].idx,false,true);
+        c+=distance;
         current=0;
         for(int i=p.splitStart;i<p.splitEnd;i++) {
             int next=p.mina[i];
             if(current<next) {
                 drive(drived,p.Shortest[current][next],result,remaining,time,halfplayed,fullplayed,current,next,p);
+                c+=p.DriveCost[current][next];
             }else if (current>next) {
                 drive(drived,p.Shortest[next][current],result,remaining,time,halfplayed,fullplayed,current,next,p);
+                c+=p.DriveCost[next][current];
             }
             play(drived,p.scenes[next].stay,result,remaining,time,halfplayed,fullplayed,i,false,true);
             current=next;
         }
         if(current!=0) {
             drive(drived,p.Shortest[0][current],result,remaining,time,halfplayed,fullplayed,current,0,p);
+            c+=p.DriveCost[current][0];
         }
         drive(drived,static_cast<double>(p.distanceFromStart)/SPEEDHIGH,result,remaining,time,halfplayed,fullplayed,0,-1);
+        c+=p.distanceFromStart;
+        c+=COSTROOM*(result-1);
+        costMerge=c;
         stMerge=sscurrent->str();
         return result;
     }

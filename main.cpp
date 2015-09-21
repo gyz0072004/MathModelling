@@ -33,10 +33,26 @@ int main(){
         cout<<china.split(i)<<endl;
     }
     china.realMergeCar();
+    bool *merged=new bool[china.provinces.size()];
+    for (int i=0;i<china.provinces.size();i++) {
+        merged[i]=false;
+    }
+    fstream fs("/Users/gyz/Workspaces/xcode/math/math/data/1.txt");
     for(int i=0;i<china.realMergedCar.size();i++) {
         cout<<"Merge Province: "<<china.realMergedCar[i].i<<" "<<china.realMergedCar[i].j<<endl;
         cout<<china.provinces[china.realMergedCar[i].i].stMerge;
+        merged[china.realMergedCar[i].i]=true;
+        merged[china.realMergedCar[i].j]=true;
+        fs<<"Total price: "<<china.provinces[china.realMergedCar[i].i].costCar<<endl;
     }
+    for(int i=0;i<china.provinces.size();i++) {
+        if(!merged[i]) {
+            china.provinces[i].calcCar();
+            fs<<"Province: "<<china.provinces[i].stCar;
+            fs<<"Total price: "<<china.provinces[i].costCar<<endl;
+        }
+    }
+    fs.close();
 //    china.timeCalcTest(10);
 //    cout<<china.provinces[9].timeCalc(china.provinces[9].mina)<<endl;
 	//system("PAUSE");
