@@ -480,7 +480,7 @@ public:
             time=DRIVESTART;
             result++;
             remaining=MAXDRIVE;
-            halfplayed=true;
+            halfplayed=false;
             fullplayed=false;
         }
         *sscurrent<<result<<"\t"<<time<<"\tdrive\t"<<(start<0?start:scenes[start].idx)<<"\t"<<mileage<<"\t"<<(end<0?end:scenes[end].idx)<<"\t\t"<<length<<"\t"<<costd<<endl;
