@@ -43,7 +43,7 @@ int main(){
         fs<<china.provinces[china.realMergedCar[i].i].stMerge;
         merged[china.realMergedCar[i].i]=true;
         merged[china.realMergedCar[i].j]=true;
-        fs<<"Total price: "<<china.provinces[china.realMergedCar[i].i].costCar<<endl;
+        fs<<"Total price: "<<china.provinces[china.realMergedCar[i].i].costMerge<<endl;
     }
     for(int i=0;i<china.provinces.size();i++) {
         if(!merged[i]) {
