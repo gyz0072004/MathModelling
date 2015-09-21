@@ -26,7 +26,7 @@
 #define MAXDATE 15
 #define COSTROOM 300
 #define COSTRENT 300
-#define HEADING "天数\t时间\t方式\t起始\t里程\t到达\t游玩\t时长\t价格"
+#define HEADING "天数,时间,方式,起始,里程,到达,游玩,时长,价格"
 
 using namespace std;
 
@@ -221,7 +221,7 @@ public:
 		for(int i=0;i<sceneCityIdx.size();i++){
 			cout<<"Scene:"<<scenes[i].name<<endl;
 			for(int j=0;j<sceneCityIdx[i].size();j++){
-				cout<<sceneCityIdx[i][j]<<"("<<sceneCityTime[i][j]<<")\t";
+				cout<<sceneCityIdx[i][j]<<"("<<sceneCityTime[i][j]<<"),";
 			}
 			cout<<endl;
 		}
@@ -276,7 +276,7 @@ public:
 	void printDistanceMat(){
 		for(int i=0;i<cityNum;i++){
 			for(int j=0;j<cityNum;j++){
-				cout<<DistanceMat[i][j]<<'\t';
+				cout<<DistanceMat[i][j]<<',';
 			}
 			cout<<endl;
 		}
@@ -324,7 +324,7 @@ public:
 		cout<<"Shortest Mat:"<<endl;
 		for(int i=0;i<sceneNum;i++){
 			for(int j=0;j<sceneNum;j++){
-				cout<<Shortest[i][j]<<"\t";
+				cout<<Shortest[i][j]<<",";
 			}
 			cout<<endl;
 		}
@@ -473,10 +473,10 @@ public:
             costd=mileage;
         }
         while(length>remaining) {
-            *sscurrent<<result<<"\t"<<time<<"\tdrive\t"<<((plain||start<0)?start:scenes[start].idx)<<"\t"<<mileage<<"\t"<<((plain||end<0)?end:scenes[end].idx)<<"\t\t"<<remaining<<"\t"<<costd<<endl;
-            *sscurrent<<result<<"\t\troom\t\t\t\t\t\t"<<COSTROOM<<endl;
+            *sscurrent<<result<<","<<time<<",drive,"<<((plain||start<0)?start:scenes[start].idx)<<","<<mileage<<","<<((plain||end<0)?end:scenes[end].idx)<<",,"<<remaining<<","<<costd<<endl;
+            *sscurrent<<result<<",,room,,,,,,"<<COSTROOM<<endl;
             if(rent) {
-                *sscurrent<<result<<"\t\trent\t\t\t\t\t\t"<<COSTRENT<<endl;
+                *sscurrent<<result<<",,rent,,,,,,"<<COSTRENT<<endl;
             }
             length-=remaining;
             time=DRIVESTART;
@@ -485,7 +485,7 @@ public:
             halfplayed=false;
             fullplayed=false;
         }
-        *sscurrent<<result<<"\t"<<time<<"\tdrive\t"<<((plain||start<0)?start:scenes[start].idx)<<"\t"<<mileage<<"\t"<<((plain||end<0)?end:scenes[end].idx)<<"\t\t"<<length<<"\t"<<costd<<endl;
+        *sscurrent<<result<<","<<time<<",drive,"<<((plain||start<0)?start:scenes[start].idx)<<","<<mileage<<","<<((plain||end<0)?end:scenes[end].idx)<<",,"<<length<<","<<costd<<endl;
         time+=length;
         drived=length;
         remaining-=length;
@@ -502,8 +502,8 @@ public:
             costd=mileage;
         }
         while(length>remaining) {
-            *sscurrent<<result<<"\t"<<time<<"\tdrive\t"<<(start<0?start:p.scenes[start].idx)<<"\t"<<mileage<<"\t"<<(end<0?end:p.scenes[end].idx)<<"\t\t"<<remaining<<"\t"<<costd<<endl;
-            *sscurrent<<result<<"\t\troom\t\t\t\t\t\t"<<COSTROOM<<endl;
+            *sscurrent<<result<<","<<time<<",drive,"<<(start<0?start:p.scenes[start].idx)<<","<<mileage<<","<<(end<0?end:p.scenes[end].idx)<<",,"<<remaining<<","<<costd<<endl;
+            *sscurrent<<result<<",,room,,,,,,"<<COSTROOM<<endl;
             length-=remaining;
             time=DRIVESTART;
             result++;
@@ -511,7 +511,7 @@ public:
             halfplayed=false;
             fullplayed=false;
         }
-        *sscurrent<<result<<"\t"<<time<<"\tdrive\t"<<(start<0?start:p.scenes[start].idx)<<"\t"<<mileage<<"\t"<<(end<0?end:p.scenes[end].idx)<<"\t\t"<<length<<"\t"<<costd<<endl;
+        *sscurrent<<result<<","<<time<<",drive,"<<(start<0?start:p.scenes[start].idx)<<","<<mileage<<","<<(end<0?end:p.scenes[end].idx)<<",,"<<length<<","<<costd<<endl;
         time+=length;
         drived=length;
         remaining-=length;
@@ -519,14 +519,14 @@ public:
     
     void flightOrTrain(double& drived,float length,int& result,double& remaining, double& time,bool& halfplayed,bool& fullplayed,int start,int end,int costf,bool flight=true) {
         if(fullplayed||length>DRIVEEND-time) {
-            *sscurrent<<result<<"\t\troom\t\t\t\t\t\t"<<COSTROOM<<endl;
-            *sscurrent<<result<<"\t\trent\t\t\t\t\t\t"<<COSTRENT<<endl;
+            *sscurrent<<result<<",,room,,,,,,"<<COSTROOM<<endl;
+            *sscurrent<<result<<",,rent,,,,,,"<<COSTRENT<<endl;
             result++;
             time=DRIVESTART;
             fullplayed=false;
             drived=0;
         }
-        *sscurrent<<result<<"\t"<<time<<"\t"<<(flight?"flight":"train")<<"\t"<<(start<0?start:scenes[start].idx)<<"\t\t"<<(end<0?end:scenes[end].idx)<<"\t\t"<<length<<"\t"<<costf<<endl;
+        *sscurrent<<result<<","<<time<<","<<(flight?"flight":"train")<<","<<(start<0?start:scenes[start].idx)<<",,"<<(end<0?end:scenes[end].idx)<<",,"<<length<<","<<costf<<endl;
         halfplayed=true;
         time+=length;
         remaining=DRIVEEND-time;
@@ -539,7 +539,7 @@ public:
         switch (length) {
             case HOURHALFDAY:
                 if(halfplayed&&drived<=MAXPLAYDRIVE&&time+length<=SCENEEND) {
-                    *sscurrent<<result<<"\t"<<time<<"\t\t\t\t\t"<<(plain?idx:scenes[idx].idx)<<"\t0.5 DAY\t"<<endl;
+                    *sscurrent<<result<<","<<time<<",,,,,"<<(plain?idx:scenes[idx].idx)<<",0.5 DAY,"<<endl;
                     time+=length;
                     if(remaining>DRIVEEND-time) {
                         remaining=DRIVEEND-time;
@@ -550,7 +550,7 @@ public:
                     fullplayed=true;
                 }
                 else if(!halfplayed && drived<=MAXHALFDRIVE && time + length<=SCENEEND) {
-                    *sscurrent<<result<<"\t"<<time<<"\t\t\t\t\t"<<(plain?idx:scenes[idx].idx)<<"\t0.5 DAY\t"<<endl;
+                    *sscurrent<<result<<","<<time<<",,,,,"<<(plain?idx:scenes[idx].idx)<<",0.5 DAY,"<<endl;
                     time+=length;
                     halfplayed=true;
                     if(remaining>DRIVEEND-time) {
@@ -561,12 +561,12 @@ public:
                     }
                     fullplayed=false;
                 } else {
-                    *sscurrent<<result<<"\t\troom\t\t\t\t\t\t"<<COSTROOM<<endl;
+                    *sscurrent<<result<<",,room,,,,,,"<<COSTROOM<<endl;
                     if(rent) {
-                        *sscurrent<<result<<"\t\trent\t\t\t\t\t\t"<<COSTRENT<<endl;
+                        *sscurrent<<result<<",,rent,,,,,,"<<COSTRENT<<endl;
                     }
                     result++;
-                    *sscurrent<<result<<"\t"<<SCENESTART<<"\t\t\t\t\t"<<(plain?idx:scenes[idx].idx)<<"\t0.5 DAY\t"<<endl;
+                    *sscurrent<<result<<","<<SCENESTART<<",,,,,"<<(plain?idx:scenes[idx].idx)<<",0.5 DAY,"<<endl;
                     time=SCENESTART+length;
                     drived=0;
                     remaining=MAXHALFDRIVE;
@@ -576,7 +576,7 @@ public:
                 break;
             case HOURFULLDAY:
                 if(drived<=MAXPLAYDRIVE&&time+length<=SCENEEND) {
-                    *sscurrent<<result<<"\t"<<time<<"\t\t\t\t\t"<<(plain?idx:scenes[idx].idx)<<"\t1 DAY\t"<<endl;
+                    *sscurrent<<result<<","<<time<<",,,,,"<<(plain?idx:scenes[idx].idx)<<",1 DAY,"<<endl;
                     time+=length;
                     if(remaining>DRIVEEND-time) {
                         remaining=DRIVEEND-time;
@@ -585,12 +585,12 @@ public:
                         remaining=MAXPLAYDRIVE-drived;
                     }
                 }else {
-                    *sscurrent<<result<<"\t\troom\t\t\t\t\t\t"<<COSTROOM<<endl;
+                    *sscurrent<<result<<",,room,,,,,,"<<COSTROOM<<endl;
                     if(rent) {
-                        *sscurrent<<result<<"\t\trent\t\t\t\t\t\t"<<COSTRENT<<endl;
+                        *sscurrent<<result<<",,rent,,,,,,"<<COSTRENT<<endl;
                     }
                     result++;
-                    *sscurrent<<result<<"\t"<<SCENESTART<<"\t\t\t\t\t"<<(plain?idx:scenes[idx].idx)<<"\t1 DAY\t"<<endl;
+                    *sscurrent<<result<<","<<SCENESTART<<",,,,,"<<(plain?idx:scenes[idx].idx)<<",1 DAY,"<<endl;
                     time=SCENESTART+length;
                     drived=0;
                     remaining=MAXPLAYDRIVE;
@@ -598,10 +598,10 @@ public:
                 fullplayed=true;
                 break;
             case HOURCITY:
-                *sscurrent<<result<<"\t"<<time<<"\t\t\t\t\t"<<(plain?idx:scenes[idx].idx)<<"\t24 HOURS\t"<<endl;
-                *sscurrent<<result<<"\t\troom\t\t\t\t\t\t"<<COSTROOM<<endl;
+                *sscurrent<<result<<","<<time<<",,,,,"<<(plain?idx:scenes[idx].idx)<<",24 HOURS,"<<endl;
+                *sscurrent<<result<<",,room,,,,,,"<<COSTROOM<<endl;
                 if(rent) {
-                    *sscurrent<<result<<"\t\trent\t\t\t\t\t\t"<<COSTRENT<<endl;
+                    *sscurrent<<result<<",,rent,,,,,,"<<COSTRENT<<endl;
                 }
                 result++;
                 drived=0;
@@ -613,22 +613,22 @@ public:
                 break;
             case HOURTWODAY:
                 if(time+HOURFULLDAY<=SCENEEND&&drived<=MAXPLAYDRIVE) {
-                    *sscurrent<<result<<"\t"<<time<<"\t\t\t\t\t"<<(plain?idx:scenes[idx].idx)<<"\t2 DAYS\t"<<endl;
-                    *sscurrent<<result<<"\t\troom\t\t\t\t\t\t"<<COSTROOM<<endl;
+                    *sscurrent<<result<<","<<time<<",,,,,"<<(plain?idx:scenes[idx].idx)<<",2 DAYS,"<<endl;
+                    *sscurrent<<result<<",,room,,,,,,"<<COSTROOM<<endl;
                     if(rent) {
-                        *sscurrent<<result<<"\t\trent\t\t\t\t\t\t"<<COSTRENT<<endl;
+                        *sscurrent<<result<<",,rent,,,,,,"<<COSTRENT<<endl;
                     }
                     result++;
                 }else {
-                    *sscurrent<<result<<"\t"<<SCENESTART<<"\t\t\t\t\t"<<(plain?idx:scenes[idx].idx)<<"\t2 DAYS\t"<<endl;
-                    *sscurrent<<result<<"\t\troom\t\t\t\t\t\t"<<COSTROOM<<endl;
+                    *sscurrent<<result<<","<<SCENESTART<<",,,,,"<<(plain?idx:scenes[idx].idx)<<",2 DAYS,"<<endl;
+                    *sscurrent<<result<<",,room,,,,,,"<<COSTROOM<<endl;
                     if(rent) {
-                        *sscurrent<<result<<"\t\trent\t\t\t\t\t\t"<<COSTRENT<<endl;
+                        *sscurrent<<result<<",,rent,,,,,,"<<COSTRENT<<endl;
                     }
-                    *sscurrent<<result+1<<"\t"<<SCENESTART<<"\t\t\t\t\t"<<(plain?idx:scenes[idx].idx)<<"\t2 DAYS\t"<<endl;
-                    *sscurrent<<result+1<<"\t\troom\t\t\t\t\t\t"<<COSTROOM<<endl;
+                    *sscurrent<<result+1<<","<<SCENESTART<<",,,,,"<<(plain?idx:scenes[idx].idx)<<",2 DAYS,"<<endl;
+                    *sscurrent<<result+1<<",,room,,,,,,"<<COSTROOM<<endl;
                     if(rent) {
-                        *sscurrent<<result+1<<"\t\trent\t\t\t\t\t\t"<<COSTRENT<<endl;
+                        *sscurrent<<result+1<<",,rent,,,,,,"<<COSTRENT<<endl;
                     }
                     result+=2;
                 }
