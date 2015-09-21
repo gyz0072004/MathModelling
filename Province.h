@@ -146,6 +146,7 @@ public:
         for(int i=0;i<sceneNum;i++) {
             fs>>mina[i];
         }
+        splitEnd=sceneNum;
     }
 
 	void addCity(string cityName, int cityIdx){

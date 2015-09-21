@@ -198,7 +198,7 @@ public:
             sort(vsp.begin(),vsp.end());
             SortProvince sp=vsp[0];
             realMergedCar.push_back(sp);
-            int parenti=sp.i<31?sp.i:provinces[sp.i].parentIdx-1,parentj=sp.j<31?sp.j:provinces[sp.j].parentIdx-1;
+            int parenti=(sp.i<31?sp.i:provinces[sp.i].parentIdx-1),parentj=(sp.j<31?sp.j:provinces[sp.j].parentIdx-1);
             provinces[sp.i].merge(provinces[sp.j],DistanceMat[parenti][parentj]);
             for(vector<SortProvince>::iterator iter=vsp.begin();iter!=vsp.end();) {
                 if(iter->has(sp.i,sp.j)) {
