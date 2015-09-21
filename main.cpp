@@ -39,8 +39,8 @@ int main(){
     }
     fstream fs("/Users/gyz/Workspaces/xcode/math/math/data/1.txt");
     for(int i=0;i<china.realMergedCar.size();i++) {
-        cout<<"Merge Province: "<<china.realMergedCar[i].i<<" "<<china.realMergedCar[i].j<<endl;
-        cout<<china.provinces[china.realMergedCar[i].i].stMerge;
+        fs<<"Merge Province: "<<china.realMergedCar[i].i<<" "<<china.realMergedCar[i].j<<endl;
+        fs<<china.provinces[china.realMergedCar[i].i].stMerge;
         merged[china.realMergedCar[i].i]=true;
         merged[china.realMergedCar[i].j]=true;
         fs<<"Total price: "<<china.provinces[china.realMergedCar[i].i].costCar<<endl;
@@ -48,7 +48,8 @@ int main(){
     for(int i=0;i<china.provinces.size();i++) {
         if(!merged[i]) {
             china.provinces[i].calcCar();
-            fs<<"Province: "<<china.provinces[i].stCar;
+            fs<<"Province: "<<i<<endl;
+            fs<<china.provinces[i].stCar;
             fs<<"Total price: "<<china.provinces[i].costCar<<endl;
         }
     }
