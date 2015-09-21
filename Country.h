@@ -212,31 +212,31 @@ public:
     
     void compareTrainOrFlight() {
         for(int i=0;i<31;i++) {
-            if(i!=StartIdx) {
-                if(costTrain[StartIdx][i]>0&&timeTrain[StartIdx][i]<=6&&timeTrain[StartIdx][i]>0) {
-                    provinces[i].calcTrain(timeTrain[StartIdx][i],costTrain[StartIdx][i]);
-                    if(costFlight[StartIdx][i]>0) {
-                        provinces[i].calcTrainFlight(timeTrain[StartIdx][i], costTrain[StartIdx][i], costFlight[StartIdx][i]);
-                        provinces[i].calcFlightTrain(timeTrain[StartIdx][i], costTrain[StartIdx][i], costFlight[StartIdx][i]);
+            if(i!=StartIdx-1) {
+                if(costTrain[StartIdx-1][i]>0&&timeTrain[StartIdx-1][i]<=6&&timeTrain[StartIdx-1][i]>0) {
+                    provinces[i].calcTrain(timeTrain[StartIdx-1][i],costTrain[StartIdx-1][i]);
+                    if(costFlight[StartIdx-1][i]>0) {
+                        provinces[i].calcTrainFlight(timeTrain[StartIdx-1][i], costTrain[StartIdx-1][i], costFlight[StartIdx-1][i]);
+                        provinces[i].calcFlightTrain(timeTrain[StartIdx-1][i], costTrain[StartIdx-1][i], costFlight[StartIdx-1][i]);
                     }
                 }
-                if(costFlight[StartIdx][i]>0) {
-                    provinces[i].calcFlight(costFlight[StartIdx][i]);
+                if(costFlight[StartIdx-1][i]>0) {
+                    provinces[i].calcFlight(costFlight[StartIdx-1][i]);
                 }
                 if(provinces[i].minl>15) {
                     int choiceTemp=provinces[i].choice();
                     if (choiceTemp==0) {
                         split(i+1);
                     }
-                    if(costTrain[StartIdx][i]>0&&timeTrain[StartIdx][i]<=6&&timeTrain[StartIdx][i]>0) {
-                        provinces[i].calcTrain(timeTrain[StartIdx][i],costTrain[StartIdx][i]);
-                        if(costFlight[StartIdx][i]>0) {
-                            provinces[i].calcTrainFlight(timeTrain[StartIdx][i], costTrain[StartIdx][i], costFlight[StartIdx][i]);
-                            provinces[i].calcFlightTrain(timeTrain[StartIdx][i], costTrain[StartIdx][i], costFlight[StartIdx][i]);
+                    if(costTrain[StartIdx-1][i]>0&&timeTrain[StartIdx-1][i]<=6&&timeTrain[StartIdx-1][i]>0) {
+                        provinces[i].calcTrain(timeTrain[StartIdx-1][i],costTrain[StartIdx-1][i]);
+                        if(costFlight[StartIdx-1][i]>0) {
+                            provinces[i].calcTrainFlight(timeTrain[StartIdx-1][i], costTrain[StartIdx-1][i], costFlight[StartIdx-1][i]);
+                            provinces[i].calcFlightTrain(timeTrain[StartIdx-1][i], costTrain[StartIdx-1][i], costFlight[StartIdx-1][i]);
                         }
                     }
-                    if(costFlight[StartIdx][i]>0) {
-                        provinces[i].calcFlight(costFlight[StartIdx][i]);
+                    if(costFlight[StartIdx-1][i]>0) {
+                        provinces[i].calcFlight(costFlight[StartIdx-1][i]);
                     }
                 } else {
                     provinces[i].calcCar();
@@ -248,16 +248,16 @@ public:
         for(int i=31;i<provinces.size();i++) {
             provinces[i].calcCar();
             int parentIdx=provinces[i].parentIdx-1;
-            if(parentIdx!=StartIdx) {
-                if(costTrain[StartIdx][parentIdx]>0&&timeTrain[StartIdx][parentIdx]<=6&&timeTrain[StartIdx][parentIdx]>0) {
-                    provinces[i].calcTrain(timeTrain[StartIdx][parentIdx],costTrain[StartIdx][parentIdx]);
-                    if(costFlight[StartIdx][parentIdx]>0) {
-                        provinces[i].calcTrainFlight(timeTrain[StartIdx][parentIdx], costTrain[StartIdx][parentIdx], costFlight[StartIdx][parentIdx]);
-                        provinces[i].calcFlightTrain(timeTrain[StartIdx][parentIdx], costTrain[StartIdx][parentIdx], costFlight[StartIdx][parentIdx]);
+            if(parentIdx!=StartIdx-1) {
+                if(costTrain[StartIdx-1][parentIdx]>0&&timeTrain[StartIdx-1][parentIdx]<=6&&timeTrain[StartIdx-1][parentIdx]>0) {
+                    provinces[i].calcTrain(timeTrain[StartIdx-1][parentIdx],costTrain[StartIdx-1][parentIdx]);
+                    if(costFlight[StartIdx-1][parentIdx]>0) {
+                        provinces[i].calcTrainFlight(timeTrain[StartIdx-1][parentIdx], costTrain[StartIdx-1][parentIdx], costFlight[StartIdx-1][parentIdx]);
+                        provinces[i].calcFlightTrain(timeTrain[StartIdx-1][parentIdx], costTrain[StartIdx-1][parentIdx], costFlight[StartIdx-1][parentIdx]);
                     }
                 }
-                if(costFlight[StartIdx][parentIdx]>0) {
-                    provinces[i].calcFlight(costFlight[StartIdx][parentIdx]);
+                if(costFlight[StartIdx-1][parentIdx]>0) {
+                    provinces[i].calcFlight(costFlight[StartIdx-1][parentIdx]);
                 }
             }
         }
