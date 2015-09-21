@@ -211,6 +211,7 @@ public:
     }
     
     void compareTrainOrFlight() {
+        cout<<"******************";
         for(int i=0;i<31;i++) {
             if(i!=StartIdx-1) {
                 if(costTrain[StartIdx-1][i]>0&&timeTrain[StartIdx-1][i]<=6&&timeTrain[StartIdx-1][i]>0) {
@@ -224,6 +225,7 @@ public:
                     provinces[i].calcFlight(costFlight[StartIdx-1][i]);
                 }
                 if(provinces[i].minl>15) {
+                    cout<<i<<" is larger choice: "<<provinces[i].choice()<<endl;
                     int choiceTemp=provinces[i].choice();
                     if (choiceTemp==0) {
                         split(i+1);

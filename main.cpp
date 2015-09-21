@@ -52,23 +52,23 @@ int main(){
             switch (china.provinces[i].choice()) {
                 case 0:
                     fs<<china.provinces[i].stCar;
-                    fs<<"Total price: "<<china.provinces[i].stCar;
+                    fs<<"Total price: "<<china.provinces[i].costCar;
                     break;
                 case 1:
                     fs<<china.provinces[i].stTrain;
-                    fs<<"Total price: "<<china.provinces[i].stTrain;
+                    fs<<"Total price: "<<china.provinces[i].costTrain;
                     break;
                 case 2:
                     fs<<china.provinces[i].stFlight;
-                    fs<<"Total price: "<<china.provinces[i].stFlight;
+                    fs<<"Total price: "<<china.provinces[i].costFlight;
                     break;
                 case 3:
                     fs<<china.provinces[i].stTrainFlight;
-                    fs<<"Total price: "<<china.provinces[i].stTrainFlight;
+                    fs<<"Total price: "<<china.provinces[i].costTrainFlight;
                     break;
                 case 4:
                     fs<<china.provinces[i].stFlightTrain;
-                    fs<<"Total price: "<<china.provinces[i].stFlightTrain;
+                    fs<<"Total price: "<<china.provinces[i].costFlightTrain;
                     break;
             }
         }
