@@ -24,7 +24,7 @@ int main(){
 	china.initCity();//for all province:init cities(SceneDistance*.csv)/init sceneCity* Mat/init distance between cities(CityDistance.csv)/init shortest drive time between scenes
 	
 	cout<<"Choose Start Province(default:26.XiAn):";
-	int start = 1;
+	int start = 27;
 	//cin>>start;
 	china.setStartProvince(start);
     for(int i=1;i<=31;i++) {
@@ -35,7 +35,10 @@ int main(){
     china.realMergeCar();
     for(int i=0;i<china.realMergedCar.size();i++) {
         cout<<"Merge Province: "<<china.realMergedCar[i].i<<" "<<china.realMergedCar[i].j<<endl;
+        cout<<china.provinces[china.realMergedCar[i].i].stMerge<<china.provinces[china.realMergedCar[i].j].stMerge;
     }
+//    china.timeCalcTest(10);
+//    cout<<china.provinces[9].timeCalc(china.provinces[9].mina)<<endl;
 	//system("PAUSE");
 	return 0;
 }
