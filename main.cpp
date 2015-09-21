@@ -35,7 +35,7 @@ int main(){
     china.realMergeCar();
     for(int i=0;i<china.realMergedCar.size();i++) {
         cout<<"Merge Province: "<<china.realMergedCar[i].i<<" "<<china.realMergedCar[i].j<<endl;
-        cout<<china.provinces[china.realMergedCar[i].i].stMerge<<china.provinces[china.realMergedCar[i].j].stMerge;
+        cout<<china.provinces[china.realMergedCar[i].i].stMerge;
     }
 //    china.timeCalcTest(10);
 //    cout<<china.provinces[9].timeCalc(china.provinces[9].mina)<<endl;

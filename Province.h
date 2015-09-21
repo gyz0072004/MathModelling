@@ -460,10 +460,10 @@ public:
         return result;
     }
     
-    void drive(double& drived,double length,int& result,double& remaining,double& time,bool& halfplayed,bool& fullplayed,int start,int end,bool rent=false) {
+    void drive(double& drived,double length,int& result,double& remaining,double& time,bool& halfplayed,bool& fullplayed,int start,int end,bool rent=false,bool plain=false) {
         int mileage=0;
         float costd=0;
-        if(start>=0&&end>=0) {
+        if(start>=0&&end>=0&&!plain) {
             mileage=DriveLength[start][end];
             costd=DriveCost[start][end];
         }else {
@@ -471,7 +471,7 @@ public:
             costd=mileage;
         }
         while(length>remaining) {
-            *sscurrent<<result<<"\t"<<time<<"\tdrive\t"<<(start<0?start:scenes[start].idx)<<"\t"<<mileage<<"\t"<<(end<0?end:scenes[end].idx)<<"\t\t"<<remaining<<"\t"<<costd<<endl;
+            *sscurrent<<result<<"\t"<<time<<"\tdrive\t"<<((plain||start<0)?start:scenes[start].idx)<<"\t"<<mileage<<"\t"<<((plain||end<0)?end:scenes[end].idx)<<"\t\t"<<remaining<<"\t"<<costd<<endl;
             *sscurrent<<result<<"\t\troom\t\t\t\t\t\t"<<COSTROOM<<endl;
             if(rent) {
                 *sscurrent<<result<<"\t\trent\t\t\t\t\t\t"<<COSTRENT<<endl;
@@ -483,7 +483,33 @@ public:
             halfplayed=false;
             fullplayed=false;
         }
-        *sscurrent<<result<<"\t"<<time<<"\tdrive\t"<<(start<0?start:scenes[start].idx)<<"\t"<<mileage<<"\t"<<(end<0?end:scenes[end].idx)<<"\t\t"<<length<<"\t"<<costd<<endl;
+        *sscurrent<<result<<"\t"<<time<<"\tdrive\t"<<((plain||start<0)?start:scenes[start].idx)<<"\t"<<mileage<<"\t"<<((plain||end<0)?end:scenes[end].idx)<<"\t\t"<<length<<"\t"<<costd<<endl;
+        time+=length;
+        drived=length;
+        remaining-=length;
+    }
+    
+    void drive(double& drived,double length,int& result,double& remaining,double& time,bool& halfplayed,bool& fullplayed,int start,int end,const Province& p) {
+        int mileage=0;
+        float costd=0;
+        if(start>=0&&end>=0) {
+            mileage=p.DriveLength[start][end];
+            costd=p.DriveCost[start][end];
+        }else {
+            mileage=length*60;
+            costd=mileage;
+        }
+        while(length>remaining) {
+            *sscurrent<<result<<"\t"<<time<<"\tdrive\t"<<(start<0?start:p.scenes[start].idx)<<"\t"<<mileage<<"\t"<<(end<0?end:p.scenes[end].idx)<<"\t\t"<<remaining<<"\t"<<costd<<endl;
+            *sscurrent<<result<<"\t\troom\t\t\t\t\t\t"<<COSTROOM<<endl;
+            length-=remaining;
+            time=DRIVESTART;
+            result++;
+            remaining=MAXDRIVE;
+            halfplayed=false;
+            fullplayed=false;
+        }
+        *sscurrent<<result<<"\t"<<time<<"\tdrive\t"<<(start<0?start:p.scenes[start].idx)<<"\t"<<mileage<<"\t"<<(end<0?end:p.scenes[end].idx)<<"\t\t"<<length<<"\t"<<costd<<endl;
         time+=length;
         drived=length;
         remaining-=length;
@@ -507,11 +533,11 @@ public:
         }
     }
     
-    void play(double& drived,int length,int& result,double& remaining, double& time,bool& halfplayed,bool& fullplayed,int idx,bool rent=false) {
+    void play(double& drived,int length,int& result,double& remaining, double& time,bool& halfplayed,bool& fullplayed,int idx,bool rent=false,bool plain=false) {
         switch (length) {
             case HOURHALFDAY:
                 if(halfplayed&&drived<=MAXPLAYDRIVE&&time+length<=SCENEEND) {
-                    *sscurrent<<result<<"\t"<<time<<"\t\t\t\t\t"<<scenes[idx].idx<<"\t0.5 DAY\t"<<endl;
+                    *sscurrent<<result<<"\t"<<time<<"\t\t\t\t\t"<<(plain?idx:scenes[idx].idx)<<"\t0.5 DAY\t"<<endl;
                     time+=length;
                     if(remaining>DRIVEEND-time) {
                         remaining=DRIVEEND-time;
@@ -522,7 +548,7 @@ public:
                     fullplayed=true;
                 }
                 else if(!halfplayed && drived<=MAXHALFDRIVE && time + length<=SCENEEND) {
-                    *sscurrent<<result<<"\t"<<time<<"\t\t\t\t\t"<<scenes[idx].idx<<"\t0.5 DAY\t"<<endl;
+                    *sscurrent<<result<<"\t"<<time<<"\t\t\t\t\t"<<(plain?idx:scenes[idx].idx)<<"\t0.5 DAY\t"<<endl;
                     time+=length;
                     halfplayed=true;
                     if(remaining>DRIVEEND-time) {
@@ -538,7 +564,7 @@ public:
                         *sscurrent<<result<<"\t\trent\t\t\t\t\t\t"<<COSTRENT<<endl;
                     }
                     result++;
-                    *sscurrent<<result<<"\t"<<SCENESTART<<"\t\t\t\t\t"<<scenes[idx].idx<<"\t0.5 DAY\t"<<endl;
+                    *sscurrent<<result<<"\t"<<SCENESTART<<"\t\t\t\t\t"<<(plain?idx:scenes[idx].idx)<<"\t0.5 DAY\t"<<endl;
                     time=SCENESTART+length;
                     drived=0;
                     remaining=MAXHALFDRIVE;
@@ -548,7 +574,7 @@ public:
                 break;
             case HOURFULLDAY:
                 if(drived<=MAXPLAYDRIVE&&time+length<=SCENEEND) {
-                    *sscurrent<<result<<"\t"<<time<<"\t\t\t\t\t"<<scenes[idx].idx<<"\t1 DAY\t"<<endl;
+                    *sscurrent<<result<<"\t"<<time<<"\t\t\t\t\t"<<(plain?idx:scenes[idx].idx)<<"\t1 DAY\t"<<endl;
                     time+=length;
                     if(remaining>DRIVEEND-time) {
                         remaining=DRIVEEND-time;
@@ -562,7 +588,7 @@ public:
                         *sscurrent<<result<<"\t\trent\t\t\t\t\t\t"<<COSTRENT<<endl;
                     }
                     result++;
-                    *sscurrent<<result<<"\t"<<SCENESTART<<"\t\t\t\t\t"<<scenes[idx].idx<<"\t1 DAY\t"<<endl;
+                    *sscurrent<<result<<"\t"<<SCENESTART<<"\t\t\t\t\t"<<(plain?idx:scenes[idx].idx)<<"\t1 DAY\t"<<endl;
                     time=SCENESTART+length;
                     drived=0;
                     remaining=MAXPLAYDRIVE;
@@ -570,7 +596,7 @@ public:
                 fullplayed=true;
                 break;
             case HOURCITY:
-                *sscurrent<<result<<"\t"<<time<<"\t\t\t\t\t"<<scenes[idx].idx<<"\t24 HOURS\t"<<endl;
+                *sscurrent<<result<<"\t"<<time<<"\t\t\t\t\t"<<(plain?idx:scenes[idx].idx)<<"\t24 HOURS\t"<<endl;
                 *sscurrent<<result<<"\t\troom\t\t\t\t\t\t"<<COSTROOM<<endl;
                 if(rent) {
                     *sscurrent<<result<<"\t\trent\t\t\t\t\t\t"<<COSTRENT<<endl;
@@ -585,14 +611,19 @@ public:
                 break;
             case HOURTWODAY:
                 if(time+HOURFULLDAY<=SCENEEND&&drived<=MAXPLAYDRIVE) {
-                    *sscurrent<<result<<"\t"<<time<<"\t\t\t\t\t"<<scenes[idx].idx<<"\t2 DAYS\t"<<endl;
+                    *sscurrent<<result<<"\t"<<time<<"\t\t\t\t\t"<<(plain?idx:scenes[idx].idx)<<"\t2 DAYS\t"<<endl;
                     *sscurrent<<result<<"\t\troom\t\t\t\t\t\t"<<COSTROOM<<endl;
                     if(rent) {
                         *sscurrent<<result<<"\t\trent\t\t\t\t\t\t"<<COSTRENT<<endl;
                     }
                     result++;
                 }else {
-                    *sscurrent<<result+1<<"\t"<<SCENESTART<<"\t\t\t\t\t"<<scenes[idx].idx<<"\t2 DAYS\t"<<endl;
+                    *sscurrent<<result<<"\t"<<SCENESTART<<"\t\t\t\t\t"<<(plain?idx:scenes[idx].idx)<<"\t2 DAYS\t"<<endl;
+                    *sscurrent<<result<<"\t\troom\t\t\t\t\t\t"<<COSTROOM<<endl;
+                    if(rent) {
+                        *sscurrent<<result<<"\t\trent\t\t\t\t\t\t"<<COSTRENT<<endl;
+                    }
+                    *sscurrent<<result+1<<"\t"<<SCENESTART<<"\t\t\t\t\t"<<(plain?idx:scenes[idx].idx)<<"\t2 DAYS\t"<<endl;
                     *sscurrent<<result+1<<"\t\troom\t\t\t\t\t\t"<<COSTROOM<<endl;
                     if(rent) {
                         *sscurrent<<result+1<<"\t\trent\t\t\t\t\t\t"<<COSTRENT<<endl;
@@ -642,7 +673,6 @@ public:
     
     int merge(Province p,int distance) {
         sscurrent->str(HEADING);
-        p.sscurrent->str("");
         double time=DRIVESTART,drived=0,remaining=MAXDRIVE;
         int result=1;
         bool halfplayed=false,fullplayed=false;
@@ -661,23 +691,23 @@ public:
         if(current!=0) {
             drive(drived,Shortest[0][current],result,remaining,time,halfplayed,fullplayed,current,0);
         }
-        drive(drived, static_cast<double>(distance)/SPEEDHIGH, result, remaining, time,halfplayed,fullplayed,0,-1);
+        drive(drived, static_cast<double>(distance)/SPEEDHIGH, result, remaining, time,halfplayed,fullplayed,scenes[0].idx,p.scenes[0].idx,false,true);
         current=0;
         for(int i=p.splitStart;i<p.splitEnd;i++) {
             int next=p.mina[i];
             if(current<next) {
-                p.drive(drived,p.Shortest[current][next],result,remaining,time,halfplayed,fullplayed,current,next);
+                drive(drived,p.Shortest[current][next],result,remaining,time,halfplayed,fullplayed,current,next,p);
             }else if (current>next) {
-                p.drive(drived,p.Shortest[next][current],result,remaining,time,halfplayed,fullplayed,current,next);
+                drive(drived,p.Shortest[next][current],result,remaining,time,halfplayed,fullplayed,current,next,p);
             }
-            p.play(drived,p.scenes[next].stay,result,remaining,time,halfplayed,fullplayed,i);
+            play(drived,p.scenes[next].stay,result,remaining,time,halfplayed,fullplayed,i,false,true);
             current=next;
         }
         if(current!=0) {
-            p.drive(drived,p.Shortest[0][current],result,remaining,time,halfplayed,fullplayed,current,0);
+            drive(drived,p.Shortest[0][current],result,remaining,time,halfplayed,fullplayed,current,0,p);
         }
-        p.drive(drived,static_cast<double>(p.distanceFromStart)/SPEEDHIGH,result,remaining,time,halfplayed,fullplayed,0,-1);
-        stMerge=sscurrent->str()+p.sscurrent->str();
+        drive(drived,static_cast<double>(p.distanceFromStart)/SPEEDHIGH,result,remaining,time,halfplayed,fullplayed,0,-1);
+        stMerge=sscurrent->str();
         return result;
     }
     
